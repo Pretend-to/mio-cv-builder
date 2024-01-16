@@ -56,6 +56,46 @@
         </div>
       </div>
     </div>
+    <div class="big-block" id="selfStrengh">
+      <div class="blocks-title">个人优势</div>
+      <div class="blocks" >
+        <div style="border: 1px solid #ccc">
+          <Toolbar
+            style="border-bottom: 1px solid #ccc"
+            :editor="editorRef"
+            :defaultConfig="toolbarConfig"
+            :mode="mode"
+          />
+          <Editor
+            style="height: 300px; overflow-y: hidden;"
+            v-model="valueHtml"
+            :defaultConfig="editorConfig"
+            :mode="mode"
+            @onCreated="handleCreated"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="big-block" id="perfessionalSkills">
+      <div class="blocks-title">专业技能</div>
+      <div class="blocks" >
+        <div style="border: 1px solid #ccc">
+          <Toolbar
+            style="border-bottom: 1px solid #ccc"
+            :editor="editorRefs"
+            :defaultConfig="toolbarConfig"
+            :mode="mode"
+          />
+          <Editor
+            style="height: 300px; overflow-y: hidden;"
+            v-model="valueHtmls"
+            :defaultConfig="editorConfig"
+            :mode="mode"
+            @onCreated="handleCreateds"
+          />
+        </div>
+      </div>
+    </div>
   </div>
   <div id="preview">
     <img :src="message" alt="Preview">
@@ -63,6 +103,10 @@
 </template>
 
 <script>
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+
 
 export default {
   data() {
@@ -94,12 +138,59 @@ export default {
       politicalStatus: '政治面貌'
     }
 
+    const editorRef = shallowRef()
+    const editorRefs = shallowRef()
+    const valueHtml = ref('<p>hello</p>')
+    const valueHtmls = ref('<p>hello</p>')
+
+    onMounted(() => {
+      setTimeout(() => {
+        valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
+      }, 1500)
+
+    })
+
+    const toolbarConfig = {}
+
+    toolbarConfig.excludeKeys = [
+    'group-image',
+    'insertVideo',
+    'fullScreen' // 排除菜单组，写菜单组 key 的值即可
+]
+    const editorConfig = { placeholder: '请输入内容...' }
+
+    onBeforeUnmount(() => {
+      const editor = editorRef.value
+      const editors = editorRefs.value
+
+      if (editor == null && editors == null) return
+      else {editor.destroy();
+         editors.destroy()}
+    })
+
+    const handleCreated = (editor) => {
+      editorRef.value = editor
+    }
+
+    const handleCreateds = (editor) => {
+      editorRefs.value = editor
+    }
+   
     return {
       message: 'https://blog.fcip.top/upload/%7BB0AD9345-05EC-E648-AC17-194FA5E5DB61%7D.jpg',
       baseInfo: baseInfo,
       chineseInfo: chineseInfo,
       labelPosition: 'top',
       isCached: false,
+      editorRef,
+      editorRefs,
+      valueHtml,
+      valueHtmls,
+      mode: 'simple',
+      toolbarConfig,
+      editorConfig,
+      handleCreated,
+      handleCreateds
     };
   },
   methods: {
@@ -120,6 +211,10 @@ export default {
     message(val) {
       this.$store.commit('setMessage', val);
     },
+  },
+  components:{
+    Editor,
+    Toolbar
   },
 };
 </script>
@@ -260,7 +355,7 @@ body {
 }
 
 .big-block {
-  margin-bottom: 48px;
+  margin-bottom: 24px;
   /* border: 1px solid #ccc; */
 }
 
