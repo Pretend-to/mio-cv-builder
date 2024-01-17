@@ -59,9 +59,9 @@
     <div class="big-block" id="selfStrengh">
       <div class="blocks-title">个人优势</div>
       <div class="blocks" >
-        <div style="border: 1px solid #ccc">
+        <div style="border: 1px solid #ccc;flex-grow: 1;">
           <Toolbar
-            style="border-bottom: 1px solid #ccc"
+          style="border-bottom: 1px solid #ccc"
             :editor="editorRef"
             :defaultConfig="toolbarConfig"
             :mode="mode"
@@ -79,7 +79,7 @@
     <div class="big-block" id="perfessionalSkills">
       <div class="blocks-title">专业技能</div>
       <div class="blocks" >
-        <div style="border: 1px solid #ccc">
+        <div style="border: 1px solid #ccc; flex-grow: 1;">
           <Toolbar
             style="border-bottom: 1px solid #ccc"
             :editor="editorRefs"
@@ -96,7 +96,39 @@
         </div>
       </div>
     </div>
-  </div>
+    <div class="big-block" id="schoolinfo">
+      <div class="blocks-title">教育经历</div>
+      <div v-for="(item, index) in allSchoolInfo" :key="index" class="blocks" style="border: 1px solid #ccc;">
+        <div class="schoolHead" style="width: 100%; display: flex;;">
+          <div class="block" style=" flex-basis: 80%; flex-grow: 7">
+            <div class="head-title">{{ item.baseInfo.schoolName? item.baseInfo.schoolName : '学校名称未填写' }}</div>
+            <div class="head-info" style="display: flex; ;">
+              <div>{{ item.baseInfo.schoolLevel? item.baseInfo.schoolLevel : '学历' }}</div>
+              <div style="border-left: 1px solid #ccc; border-right: 1px solid #ccc;">{{ item.baseInfo.studySubject? item.baseInfo.studySubject : '专业' }}</div>
+              <div>{{ item.baseInfo.studyDate? item.baseInfo.studyDate : '在校时间' }}</div>
+            </div>
+          </div>
+          <div class="block" style=" flex-basis: 20%; flex-grow: 1;">
+            <div class="head-button" id="showMoreSchoolInfo" @click="item.display = !item.display">
+              <svg t="1705501794483" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4206" width="14" height="14"><path d="M183.168 332.501333a42.666667 42.666667 0 0 1 57.621333-2.496l2.709334 2.496L512 600.96l268.501333-268.48a42.666667 42.666667 0 0 1 57.621334-2.496l2.709333 2.496a42.666667 42.666667 0 0 1 2.496 57.621333l-2.496 2.709334-298.666667 298.666666a42.666667 42.666667 0 0 1-57.621333 2.496l-2.709333-2.496-298.666667-298.666666a42.666667 42.666667 0 0 1 0-60.330667z" p-id="4207"></path></svg>
+            </div>
+          </div>                        
+        </div>
+        <div v-if="item.display" class="schoolBody" >
+          <div v-for="(value, key) in item.baseInfo" :key="key" class="block">
+            <div class="key">{{ makeTitle(key) }}</div>
+            <input type="text" :placeholder="makeTip(key)" :value="value">
+          </div>
+
+
+
+
+        </div>
+      </div>
+      <button @click="addSchool">+ 添加新的教育经历</button>
+      </div>
+    </div>
+
   <div id="preview">
     <img :src="message" alt="Preview">
   </div>
@@ -104,10 +136,9 @@
 
 <script>
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
+import { shallowRef } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-
-
+ 
 export default {
   data() {
     const baseInfo = {
@@ -135,38 +166,56 @@ export default {
       expectedCity: '期望城市',
       wechatId: '微信号',
       expectedSalary: '期望薪资',
-      politicalStatus: '政治面貌'
+      politicalStatus: '政治面貌',
+      schoolName: '学校名称',
+      schoolLevel: '学历',
+      studyDate: '入学时间',
+      studySubject: '专业',
+      mainProject: '在校经历'
     }
+
+    // const schoolInfo = {
+    //     schoolName:"",
+    //     schoolLevel:"",
+    //     studyDate:"",
+    //     studySubject:"",
+    //     mainProject:"",
+    //     display: false
+    // }
+
+    const schoolInfo = {
+        baseInfo:{
+          schoolName:"河北科技大学",
+          schoolLevel:"本科",
+          studyDate:"2022-2026",
+          studySubject:"人工智能",
+        },
+        mainExp:"xxx",
+        display: true
+    }
+
+    const allSchoolInfo = []
+    
+    const allEditor = []
 
     const editorRef = shallowRef()
     const editorRefs = shallowRef()
-    const valueHtml = ref('<p>hello</p>')
-    const valueHtmls = ref('<p>hello</p>')
-
-    onMounted(() => {
-      setTimeout(() => {
-        valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
-      }, 1500)
-
-    })
-
+    const valueHtml = '<p>hello</p>'
+    const valueHtmls = '<p>hello</p>'
     const toolbarConfig = {}
 
     toolbarConfig.excludeKeys = [
-    'group-image',
-    'insertVideo',
-    'fullScreen' // 排除菜单组，写菜单组 key 的值即可
-]
+      'group-image',
+      'insertVideo',
+      'fullScreen',// 排除菜单组，写菜单组 key 的值即可
+      'header1',
+      'header2',
+      'header3',
+      'through',
+      'insertTable'
+    ]
+
     const editorConfig = { placeholder: '请输入内容...' }
-
-    onBeforeUnmount(() => {
-      const editor = editorRef.value
-      const editors = editorRefs.value
-
-      if (editor == null && editors == null) return
-      else {editor.destroy();
-         editors.destroy()}
-    })
 
     const handleCreated = (editor) => {
       editorRef.value = editor
@@ -177,7 +226,7 @@ export default {
     }
    
     return {
-      message: 'https://blog.fcip.top/upload/%7BB0AD9345-05EC-E648-AC17-194FA5E5DB61%7D.jpg',
+      message: '/preview.jpg',
       baseInfo: baseInfo,
       chineseInfo: chineseInfo,
       labelPosition: 'top',
@@ -190,7 +239,10 @@ export default {
       toolbarConfig,
       editorConfig,
       handleCreated,
-      handleCreateds
+      handleCreateds,
+      allSchoolInfo,
+      schoolInfo,
+      allEditor,
     };
   },
   methods: {
@@ -202,6 +254,13 @@ export default {
     },
     makeTitle(key) {
       return this.chineseInfo[key];
+    },
+    addSchool() {
+      if(this.allSchoolInfo.length >= 4) {
+        alert("最多只能添加4条学校信息")
+        return
+      }
+      this.allSchoolInfo.push(this.schoolInfo)
     }
   },
   watch: {
@@ -216,7 +275,22 @@ export default {
     Editor,
     Toolbar
   },
-};
+  mounted() {
+    setTimeout(() => {
+         this.valueHtml = '<p>模拟 Ajax 异步设置内容</p>'
+       }, 1500)
+  },
+  beforeUnmount() {
+    const editor = this.editorRef.value
+    const editors = this.editorRefs.value
+
+    if (editor == null && editors == null) return
+    else {
+      editor.destroy();
+      editors.destroy()
+    }
+  }
+}
 </script>
 
 <style>
@@ -363,6 +437,8 @@ body {
   position: fixed;
   top: 0px;
   right: 0px;
+  height: 100vh;
+  overflow-y: hidden;
   width: 50%;
   display: flex;
   justify-content: center;
@@ -370,8 +446,70 @@ body {
 }
 
 #preview img {
-  margin-top: 88px;
-  width: 72%;
-  object-fit: cover;
+  margin-top: 72px;
+  margin-bottom: 24px;
 }
+.head-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  margin-left: 4px;
+}
+
+
+.head-info {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.head-info div {
+  margin-right: 8px;
+  font-size: 14px;
+  padding: 0px 4px;
+  color: rgb(128, 128, 128);
+}
+
+#schoolinfo .blocks{
+  flex-direction: column;
+}
+
+.schoolHead {
+  padding-top: 8px;
+  flex-basis: 64px;
+}
+
+.schoolHead .block {
+  height: 60px;
+  border: none;
+  padding: 8px;
+}
+
+.schoolBody {
+  display: flex;
+  margin-top: 16px;
+  width: 100%;
+  height: 500px;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.schoolBody .block {
+  flex-basis: 40%;
+  flex-grow: 1;
+  padding: 0px 8px;
+}
+
+.block .head-button {
+  display: flex;
+  flex-direction: row-reverse;
+  padding-right: 8px;
+  transition: transform 0.3s ease-in-out;
+}
+
+
+.block .head-button:hover path{
+  fill: rgb(0, 200, 255);
+}
+
+
 </style>
