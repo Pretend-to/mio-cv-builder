@@ -324,7 +324,6 @@ export default {
 
    
     return {
-      message: '/preview.jpg',
       baseInfo: baseInfo,
       chineseInfo: chineseInfo,
       labelPosition: 'top',
