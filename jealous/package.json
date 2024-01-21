@@ -13,6 +13,7 @@
   "dependencies": {
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
+    "cropperjs": "^2.0.0-beta.4",
     "element-plus": "^2.5.1",
     "pinia": "^2.1.7",
     "vue": "^3.3.11"
