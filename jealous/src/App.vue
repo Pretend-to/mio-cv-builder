@@ -147,7 +147,7 @@
     <div class="big-block" id="schoolinfo">
       <div class="blocks-title">项目经历</div>
       <div v-for="(item, index) in allProjectInfo" :key="index" class="blocks" style="border: 1px solid #ccc;">
-        <div class="schoolHead" style="width: 100%; display: flex;;">
+        <div class="schoolHead" style="width: 100%; display: flex;">
           <div class="block" style=" flex-basis: 80%; flex-grow: 7">
             <div class="head-title">{{ allProjectInfo_d[index].baseInfo.projectName? allProjectInfo_d[index].baseInfo.projectName : '未填写项目名称' }}</div>
             <div class="head-info" style="display: flex; ;">
@@ -400,7 +400,7 @@ export default {
       this.allProjectInfo_d.push(projectInfo)
     },
     delProject(index){
-      this.allProjectlInfo.splice(index, 1)
+      this.allProjectInfo.splice(index, 1)
       this.allProjectInfo_d.splice(index, 1)
     },
     delSchool(index){
@@ -475,7 +475,7 @@ export default {
       this.allSchoolInfo_d.forEach(schoolInfo => {
         const singleinfo = {
           baseInfo:schoolInfo.baseInfo,
-          mainExp:md.render(schoolInfo.mainExp)
+          mainExp:md.render(schoolInfo.mainExp ? schoolInfo.mainExp : '   ')
         }
         allInfo.schoolinfo.push(singleinfo)
       })
@@ -483,7 +483,7 @@ export default {
       this.allProjectInfo_d.forEach(projectInfo => {
         const singleinfo = {
           baseInfo:projectInfo.baseInfo,
-          mainExp:md.render(projectInfo.mainExp)
+          mainExp:md.render(projectInfo.mainExp ? projectInfo.mainExp : '   ' )
         }
         allInfo.projectinfo.push(singleinfo)
       })
