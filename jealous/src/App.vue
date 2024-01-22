@@ -226,6 +226,7 @@ import { shallowRef } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import Cropper from 'cropperjs';
 import { ElMessage } from 'element-plus'
+import  MarkdownIt  from 'markdown-it'
 
  
 export default {
@@ -452,6 +453,8 @@ export default {
       }, wait);
     },
     async preupload() {
+      const md = new MarkdownIt();
+
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 
@@ -461,9 +464,25 @@ export default {
         baseinfo: this.baseInfo_d,
         selfstrengh: this.valueHtml,
         perfessionalskill: this.valueHtmls,
-        schoolinfo: this.allSchoolInfo_d,
-        projectinfo: this.allProjectInfo_d
+        schoolinfo: [],
+        projectinfo: []
       };
+
+      this.allSchoolInfo_d.forEach(schoolInfo => {
+        const singleinfo = {
+          baseInfo:schoolInfo.baseInfo,
+          mainExp:md.render(schoolInfo.mainExp)
+        }
+        allInfo.schoolinfo.push(singleinfo)
+      })
+
+      this.allProjectInfo_d.forEach(projectInfo => {
+        const singleinfo = {
+          baseInfo:projectInfo.baseInfo,
+          mainExp:md.render(projectInfo.mainExp)
+        }
+        allInfo.projectinfo.push(singleinfo)
+      })
 
       this.toCache(allInfo)
 
