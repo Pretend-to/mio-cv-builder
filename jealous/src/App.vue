@@ -464,9 +464,13 @@ export default {
         baseinfo: this.baseInfo_d,
         selfstrengh: this.valueHtml,
         perfessionalskill: this.valueHtmls,
-        schoolinfo: [],
-        projectinfo: []
+        schoolinfo: this.allSchoolInfo_d,
+        projectinfo: this.allProjectInfo_d
       };
+    
+      this.toCache(allInfo)  //在这里先把md处理前的内容交上去，防止重复渲染
+      allInfo.schoolinfo = []
+      allInfo.projectinfo = []
 
       this.allSchoolInfo_d.forEach(schoolInfo => {
         const singleinfo = {
@@ -484,7 +488,6 @@ export default {
         allInfo.projectinfo.push(singleinfo)
       })
 
-      this.toCache(allInfo)
 
       const raw = JSON.stringify(allInfo);
       const requestOptions = {
@@ -497,23 +500,27 @@ export default {
       await fetch("/upload", requestOptions)
         .then(response => response.text())
         .then(result => {
-          if (this.uuid == '' || result == this.uuid) {
-            ElMessage({
-              message: '更新信息成功',
+          let tipMsg;
+
+          if(!this.isValidUUID(result)) {
+            throw new Error("不合法的返回值\n" + result);
+          }else{
+            if (this.uuid == '') { //我没有uuid，第一次请求
+              tipMsg =  '初始化信息成功'
+            } else if (result == this.uuid ){ //我有uuid，且收到了相同的uuid
+              tipMsg =  '更新信息成功'
+            } else if( result !== this.uuid ){ //我有uuid，但收到了不同的uuid
+              tipMsg =  '更新uuid成功'
+            } 
+          }
+          ElMessage({
+              message: tipMsg,
               type: 'success',
             })
-            this.uuid = result;
-            const key = Math.floor(Math.random() * 1000000)
-            this.previewPic = "/result/" + this.uuid + '?key=' + key;
-          } else {
-            ElMessage({
-              message: '更新信息发生未知错误',
-              type: 'warning',
-            })
-            console.log(this.uuid)
-            console.log(result)
-          }
-        })
+          this.uuid = result;
+          const key = Math.floor(Math.random() * 1000000)
+          this.previewPic = "/result/" + this.uuid + '?key=' + key;
+        })  
         .catch(error => {
           ElMessage.error('upload 请求发生错误')
           console.log('error', error);
@@ -538,6 +545,10 @@ export default {
     },
     getPdf(){
       window.open("/resultpdf/" + this.uuid)
+    },
+    isValidUUID(uuid) {
+      const uuidPattern = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+      return uuidPattern.test(uuid);
     }
   },
   watch: {
@@ -573,16 +584,22 @@ export default {
     const acchedinfo = this.getCache()
     if (acchedinfo) {
       this.baseInfo_d = acchedinfo.baseinfo
-      this.valueHtml = acchedinfo.selfstrengh
-      this.valueHtmls = acchedinfo.perfessionalskill
       this.allSchoolInfo_d = acchedinfo.schoolinfo
+      this.allSchoolInfo = acchedinfo.schoolinfo
       this.allProjectInfo_d = acchedinfo.projectinfo
-      
+      this.allProjectInfo = acchedinfo.projectinfo
+
+      setTimeout(() =>{
+        this.valueHtml = acchedinfo.selfstrengh
+        this.valueHtmls = acchedinfo.perfessionalskill
+      },100)
+
       ElMessage({
               message: '缓存恢复成功',
               type: 'success',
             })
       
+
       if(acchedinfo.uuid !== ''){
         this.uuid = acchedinfo.uuid
         this.previewPic = "/result/" + acchedinfo.uuid + ''
