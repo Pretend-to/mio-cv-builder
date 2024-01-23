@@ -533,6 +533,7 @@ export default {
       }
     },
     toCache(info){
+      console.log(this.allProjectInfo)
       localStorage.setItem("info", JSON.stringify(info));
       this.isCached = true
     },
@@ -544,7 +545,8 @@ export default {
       window.open(this.previewPic)
     },
     getPdf(){
-      window.open("/resultpdf/" + this.uuid)
+      const filename = this.baseInfo_d.name && this.baseInfo_d.expectedJob ? this.baseInfo_d.name + "-" + this.baseInfo_d.expectedJob : null
+      window.open("/resultpdf/" + this.uuid + "?n=" + filename)
     },
     isValidUUID(uuid) {
       const uuidPattern = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -560,6 +562,9 @@ export default {
     },
     valueHtmls() {
       this.updatepage()
+    },
+    allProjectInfo(){
+      console.log(this.allProjectInfo)
     }
   },
   components:{
