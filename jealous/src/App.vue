@@ -201,8 +201,7 @@
 
   <div v-show="showupload" id="upload-view">
     <div id="cooper">
-      <img v-if="cropper == null" :src='baseInfo.avatar' style="width: 100%; height:100%">
-      
+      <img v-if="cropper == null" :src='baseInfo_d.avatar' style="width: 100%; height:100%">
     </div>
     <div class="btns">
       <div id="upload">
@@ -211,7 +210,7 @@
         </div>
         <input :disabled="cropper !== null" type="file" id="file" accept="image/*" @change="handleImageUpload">
       </div>
-      <div @click="saveEditedImage" id="savepic">
+      <div @click="saveEditedImage"  id="savepic">
         <div class="btn-text"> 
           保存图像
         </div>
@@ -278,7 +277,7 @@ export default {
     const allEditor = []
 
     const cropperTemplate = `
-    <cropper-canvas background>
+    <cropper-canvas id="mycropper" background>
   <cropper-image></cropper-image>
   <cropper-shade hidden></cropper-shade>
   <cropper-handle action="select" plain></cropper-handle>
@@ -422,11 +421,16 @@ export default {
     },
     async saveEditedImage(){
       this.showupload = false;
-      const selectionPic = this.cropper.getCropperSelection()
-      const canvas = await selectionPic.$toCanvas()
-      this.baseInfo.avatar =  canvas.toDataURL()
-      this.baseInfo_d.avatar =  canvas.toDataURL()
-      this.cropper = null
+      if (this.cropper) {
+        const selectionPic = this.cropper.getCropperSelection()
+        const canvas = await selectionPic.$toCanvas()
+        this.baseInfo.avatar = canvas.toDataURL()
+        this.baseInfo_d.avatar = canvas.toDataURL()
+        this.cropper = null
+        const mycropper = document.getElementById("mycropper")
+        mycropper.remove()
+      }
+
     },
     makeCropper(src) {
       const image = new Image();
