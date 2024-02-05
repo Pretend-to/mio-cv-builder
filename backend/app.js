@@ -5,6 +5,8 @@ const { v4: uuidv4 } = require("uuid");
 const express = require("express");
 const app = express();
 
+const PORT = 5400; // 定义端口变量
+
 const staticPath = path.join(__dirname, "dist");
 app.use(express.static(staticPath));
 app.use(express.json({ limit: '1000kb' }));
@@ -100,7 +102,7 @@ app.post("/upload", async (req, res, next) => {
     const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
     await page.setViewport({ width: 1050, height: 1485 });
-    await page.goto(`http://localhost:5400/output/${uuid}`, {
+    await page.goto(`http://localhost:${PORT}/output/${uuid}`, {
       waitUntil: "networkidle0",
     });
     await page.screenshot({ path: screenshotPath });
@@ -157,7 +159,7 @@ app.get("/resultpdf/:uuid", async (req, res, next) => {
             deviceScaleFactor: window.devicePixelRatio
           };
         });
-        await page.goto(`http://localhost:5400/output/${uuid}`, {
+        await page.goto(`http://localhost:${PORT}/output/${uuid}`, {
           waitUntil: "networkidle0",
         });
         await page.pdf({
