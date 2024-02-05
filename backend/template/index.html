@@ -1,0 +1,289 @@
+<script src="https://unpkg.com/vue@3.4.15/dist/vue.global.js"></script>
+
+<div id="app">
+    <div class="head">
+        <div class="baseinfo">
+            <div id="name" >{{ head.name }}</div>
+            <div id="basicinfo">
+                <div id="sex" style="border-left: none">{{ head.basicinfo.sex }}</div>
+                <div id="age">{{ "年龄:  " + head.basicinfo.age + "岁" }}</div>
+                <div id="phone">
+                    <svg t="1705884286289" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        p-id="4245" width="16" height="16">
+                        <path
+                            d="M930.909091 725.178182c-139.636364-111.895273-180.224-55.947636-241.175273 5.073454-45.684364 45.754182-157.393455-48.314182-251.345454-144.942545-96.465455-96.605091-190.370909-211.037091-144.686546-251.717818 63.464727-63.534545 116.782545-101.701818 5.073455-241.547637-111.709091-139.822545-187.880727-33.047273-248.785455 27.973819-71.098182 71.214545-5.096727 335.616 256.395637 597.504 261.492364 259.351273 525.521455 328.005818 596.619636 256.814545 60.928-61.021091 170.100364-137.309091 27.927273-249.181091z"
+                            fill="#bfbfbf" p-id="4246"></path>
+                    </svg>
+                    <div>{{ head.basicinfo.phone }}</div>
+                </div>
+                <div id="email">
+                    <svg t="1705884451531" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        p-id="6205" width="16" height="16">
+                        <path
+                            d="M867.046319 156.952658 156.952658 156.952658c-49.040926 0-88.317465 39.720653-88.317465 88.76158l-0.444115 532.570501c0 49.040926 39.720653 88.76158 88.76158 88.76158l710.09366 0c49.040926 0 88.76158-39.720653 88.76158-88.76158L955.807898 245.714238C955.808922 196.673311 916.087245 156.952658 867.046319 156.952658zM867.046319 334.476841l-355.047342 221.903949-355.047342-221.903949 0-88.76158 355.047342 221.903949 355.047342-221.903949L867.046319 334.476841z"
+                            p-id="6206" fill="#bfbfbf"></path>
+                    </svg>
+                    <div>{{ head.basicinfo.email }}</div>
+                </div>
+            </div>
+            <div id="jobinfo">
+               <div id="job" style="border-left: none">{{ "求职意向: " + head.jobInfo.job }}</div>
+               <div id="salary">{{"期望薪资: " + head.jobInfo.salary }}</div>
+               <div id="city">{{"期望城市: " + head.jobInfo.city }}</div>
+            </div>
+        </div>
+        <div class="avatar">
+            <img :src="head.avatar" alt="avatar">
+        </div>
+    </div>
+    <div class="body">
+        <div v-for="(value,key) in myblocks" class="block">
+            <div class="block-h1">{{ maketip(key) }}</div>
+            <div v-for="item in value">
+                <div v-if="item.h2" class="h2" >
+                    <div id="titles">
+                        <div id="title" style="margin-left: 0px;">{{ item.h2.title }}</div>
+                        <div id="subtitle">{{ item.h2.subtitle }}</div>
+                        <div v-if="item.h2.tailtitle" id="tailtitle">{{ item.h2.title }}</div>
+                    </div>
+                    <div id="date">{{ item.h2.date }}</div>
+                </div>
+                <div id="content" v-html="item.content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            const chinese = {
+                selfStrenght:'个人优势',
+                peressionalskill:'专业技能',
+                schoolinfo:'学校经历',
+                projectinfo:'项目经历'
+            }
+            return {
+                info: null,
+                head:null,
+                myblocks:null,
+                chinese:chinese
+            };
+        },
+        async created() {
+            await this.getdata();
+            setTimeout(() =>{
+                this.makehead();
+                this.makeblocks();
+                console.log(JSON.stringify(this.head));
+                console.log(JSON.stringify(this.myblocks));
+            },100)
+        },
+        methods: {
+            async getdata() {
+                let currentPath = window.location.pathname;
+                let infoJsonPath;
+
+                if (currentPath.endsWith('/')) {
+                    infoJsonPath = currentPath + 'info.json';
+                } else {
+                    infoJsonPath = currentPath + '/info.json';
+                }
+
+
+                await fetch(infoJsonPath)
+                    .then(response => response.json())
+                    .then(data => {
+                        this.info = data;
+                        console.log(this.info);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching resume data:', error);
+                    });
+            },
+            makehead() {
+                const birthYear = this.info.baseinfo.birthday.substring(0, 4);
+                const formattedNumber = parseInt(birthYear);
+                const currentYear = new Date().getFullYear();
+
+                const head = {
+                    name: this.info.baseinfo.name,
+                    basicinfo:{
+                        sex:this.info.baseinfo.sex,
+                        age:(currentYear - formattedNumber),
+                        phone:this.info.baseinfo.phoneNumber,
+                        email:this.info.baseinfo.email
+                    },
+                    jobInfo:{
+                        job:this.info.baseinfo.expectedJob,
+                        salary:this.info.baseinfo.expectedSalary,
+                        city:this.info.baseinfo.expectedCity
+                    },
+                    avatar:this.info.baseinfo.avatar
+                }
+                this.head = head;
+            },
+            makeblocks(){
+                const blocks = {
+                    selfStrenght:[{content:this.info.selfstrengh}],
+                    peressionalskill:[{content:this.info.perfessionalskill}],
+                    schoolinfo:[],
+                    projectinfo:[]
+                };
+                this.info.schoolinfo.forEach(school => {
+                    const singleschool = {
+                        h2:{
+                            title:school.baseInfo.schoolName,
+                            subtitle:school.baseInfo.schoolLevel,
+                            tailtitle:school.baseInfo.studySubject,
+                            date:school.baseInfo.studyDate
+                        },
+                        content:school.mainExp
+                    }
+                    blocks.schoolinfo.push(singleschool)
+                });
+                this.info.projectinfo.forEach(project => {
+                    const singleproject = {
+                        h2:{
+                            title:project.baseInfo.projectName,
+                            subtitle:project.baseInfo.projectCharacter,
+                            date:project.baseInfo.projectDate
+                        },
+                        content:project.mainExp
+                    }
+                    blocks.projectinfo.push(singleproject)
+                });
+
+                this.myblocks = blocks;
+            },
+            maketip(key){
+                return this.chinese[key];
+            }
+        }
+    }).mount('#app');
+</script>
+
+<style>
+#app{
+    display:flex;
+    flex-direction: column;
+}
+body {
+    margin: 0px;
+}
+.head{
+    width: 100%;
+    display: flex;
+    flex-basis: 240px;
+}
+.baseinfo{
+    flex-basis: 75%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items: center;
+}
+.baseinfo > div{
+    margin: 8px 0px ;
+}
+#basicinfo{
+    display:flex;
+    flex-wrap: nowrap;
+}
+#basicinfo > div{
+    margin: 0px 4px;
+    border-left: 1px solid black;
+    padding: 0px 4px;
+}
+#jobinfo > div{
+    margin: 0px 2px;
+    border-left: 1px solid black;
+    padding-left: 8px;
+}
+#basicinfo svg{
+    position: relative;
+    top: 3px;
+    margin-right: 3px;
+}
+
+#name{
+    font-size: 54px;
+    font-weight: bold;
+}
+#phone{
+    display:flex;
+}
+#email{
+    display:flex;
+}
+
+#jobinfo{
+    display: flex;
+    flex-wrap: nowrap;
+}
+.avatar {
+    padding-top: 20px;
+    flex-basis: 20%;
+}
+.avatar img{
+    width: 200px;
+    height: 200px;
+}
+
+.body{
+    flex-basis: calc(100% - 240px);
+    display: flex;
+    flex-direction: column;
+}
+.block{
+    margin: 0px 5%;
+    flex-basis: 200px;
+    position: relative;
+}
+.block-h1{
+    display: flex;
+    align-items: center;
+    height: 45px;
+    background-color: rgb(241,250,250);
+    padding-left: 28px;
+    font-size: 24px;
+    font-weight: bold;
+    color: rgb(0,165,166);
+}
+.block-h1::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 8px;
+  height: 45px;
+  background-color: rgb(0,165,166);
+}
+
+.h2{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding-top: 16px;
+}
+#title{
+    font-size: large;
+    font-weight: bold;
+}
+#titles > div{
+    margin-left: 32px;
+}
+
+#titles{
+    display: flex;
+    flex-wrap: nowrap;
+    
+}
+
+#content{
+    margin-top: 8px;
+}
+
+</style>
