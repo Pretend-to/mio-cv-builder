@@ -31,13 +31,13 @@ Mio-Cv-Builder是一个简历构建应用程序，允许用户创建和定制他
 1. 克隆存储库：
 
 ```bash
-git clone https://github.com/Pretend-to/mio-cv-frontend
+git clone https://github.com/Pretend-to/mio-cv-builder
 ```
 
 2. 进入项目目录：
 
 ```bash
-cd Mio-Cv-Builder
+cd mio-cv-builder
 ```
 
 3. 如果需要，更改前端：

@@ -32,13 +32,13 @@ You can check out a demo of the application [here](https://cv.krumio.com).
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Pretend-to/mio-cv-frontend
+git clone https://github.com/Pretend-to/mio-cv-builder
 ```
 
 2. Navigate to the project directory:
 
 ```bash
-cd Mio-Cv-Builder
+cd mio-cv-builder
 ```
 
 3. Change the frontend if it's necessary:
