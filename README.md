@@ -1,44 +1,46 @@
 # Mio-Cv-Builder
 
-Mio-Cv-Builder is a resume builder application that allows users to create and customize their resumes. It utilizes Vue 3 for the frontend and Node.js for the backend server. Real-time communication is achieved through HTTP, and the backend leverages Puppeteer to generate resumes that can be exported as images or PDF files.
+[EN](README-en-us.md) | [中文](README.md)
 
-## Demo
+Mio-Cv-Builder是一个简历构建应用程序，允许用户创建和定制他们的简历。它利用Vue 3作为前端和Node.js作为后端服务器。通过HTTP实现实时通信，后端利用Puppeteer生成可以导出为图像或PDF文件的简历。
 
-You can check out a demo of the application [here](https://cv.krumio.com).
+## 演示
 
-## Features
+您可以在[这里](https://cv.krumio.com)查看应用程序的演示。
 
-- Create and customize resumes
-- Real-time communication between frontend and backend
-- Export resumes as images or PDF files
+## 特点
 
-## TODO
+- 创建和定制简历
+- 前端和后端之间的实时通信
+- 将简历导出为图像或PDF文件
 
-- Add more templates
-- Add more customization options
+## 待办事项
 
-## Technologies Used
+- 添加更多模板
+- 添加更多定制选项
+
+## 使用的技术
 
 - Vue 3
 - Node.js
-- HTTP communication
+- HTTP通信
 - Puppeteer
 
-## Installation
+## 安装
 
-1. Clone the repository:
+1. 克隆存储库：
 
 ```bash
 git clone https://github.com/Pretend-to/mio-cv-frontend
 ```
 
-2. Navigate to the project directory:
+2. 进入项目目录：
 
 ```bash
 cd Mio-Cv-Builder
 ```
 
-3. Change the frontend if it's necessary:
+3. 如果需要，更改前端：
 
 ```bash
 cd frontend
@@ -48,34 +50,34 @@ npm run dev
 npm run build
 ```
 
-4. Install the dependencies for the backend:
+4. 为后端安装依赖项：
 
 ```bash
 cd backend
 npm install
 ```
 
-## Usage
+## 使用
 
-To use the application, you just need to start the backend server and access the application in your browser.(Recommend to use Nginx as a reverse proxy)
+要使用该应用程序，您只需启动后端服务器并在浏览器中访问应用程序。（建议使用Nginx作为反向代理）
 
-1. Start the backend server on the default port 5400:
+1. 在默认端口5400上启动后端服务器：
 
 ```bash
 cd backend
 node server.js
 ```
 
-2. Access the application in your browser:
+2. 在浏览器中访问应用程序：
 
 ```
 http://localhost:5400
 ```
 
-## Contributing
+## 贡献
 
-Contributions are welcome! If you find any bugs or have suggestions for improvement, please open an issue or submit a pull request.
+欢迎贡献！如果您发现任何错误或有改进建议，请提出问题或提交拉取请求。
 
-## License
+## 许可证
 
-This project is licensed under the [MIT License](LICENSE).
+该项目根据[MIT许可证](LICENSE)许可。
