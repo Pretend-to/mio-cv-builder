@@ -24,7 +24,7 @@
     </div>
     <div id="tail-info">
       <div id="options">
-        <el-button>切换模板</el-button>
+        <el-button @click="changeTemplate">切换模板</el-button>
       </div>
       <div id="final-options">
         <div>
@@ -362,6 +362,14 @@ export default {
     },
     makeTitle(key) {
       return this.chineseInfo[key];
+    },
+    changeTemplate(){
+      this.$alert('功能暂未开放', '提示', {
+        confirmButtonText: '确定',
+        callback: action => {
+          console.log(action)
+        }
+      })
     },
     addSchool() {
       if(this.allSchoolInfo.length >= 4) {
