@@ -387,7 +387,7 @@ export default {
         display: true
       }
       this.allSchoolInfo.push(schoolInfo)
-      this.allSchoolInfo_d.push(schoolInfo)
+      // this.allSchoolInfo_d.push(schoolInfo)
     },
     addProject() {
       if(this.allProjectInfo.length >= 2) {
@@ -404,7 +404,7 @@ export default {
         display: true
       }
       this.allProjectInfo.push(projectInfo)
-      this.allProjectInfo_d.push(projectInfo)
+      // this.allProjectInfo_d.push(projectInfo)
     },
     delProject(index){
       this.allProjectInfo.splice(index, 1)
@@ -779,9 +779,10 @@ body {
   background-color: rgb(242, 245, 250);
 }
 
-#preview img {
+#preview .el-image {
   margin-top: 72px;
-  margin-bottom: 24px;
+  height: calc(100vh - 88px);
+  width: auto;
 }
 .head-title {
   font-size: 16px;
